@@ -50,6 +50,14 @@ namespace SpendSmart.Migrations
                 name: "IX_Transactions_CategoryId",
                 table: "Transactions",
                 column: "CategoryId");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "Date",
+                table: "Transactions",
+                type: "datetime2",
+                nullable: false,
+                defaultValueSql: "GETDATE()"
+                ); 
         }
 
         /// <inheritdoc />
