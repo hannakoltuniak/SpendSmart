@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpendSmart.Models;
 
@@ -21,8 +16,11 @@ namespace SpendSmart.Controllers
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return _context.Categories != null ?
+                        View(await _context.Categories.ToListAsync()) :
+                        Problem("Entity set 'SpendSmartDbContext.Categories'  is null.");
         }
+
 
         // GET: Category/AddOrEdit
         public IActionResult AddOrEdit(int id = 0)
@@ -31,6 +29,7 @@ namespace SpendSmart.Controllers
                 return View(new Category());
             else
                 return View(_context.Categories.Find(id));
+
         }
 
         // POST: Category/AddOrEdit
@@ -52,14 +51,16 @@ namespace SpendSmart.Controllers
             return View(category);
         }
 
+
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Categories == null)
-                return Problem("Entity set 'SpendSmartDbContext.Categories' is null!");
-
+            {
+                return Problem("Entity set 'SpendSmartDbContext.Categories'  is null.");
+            }
             var category = await _context.Categories.FindAsync(id);
             if (category != null)
             {
@@ -69,5 +70,6 @@ namespace SpendSmart.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
     }
 }
